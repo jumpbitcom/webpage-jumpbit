@@ -14,13 +14,13 @@ type Config = {
 }
 
 export const siteConfig: Config = {
-  title: "smallworld",
-  description: "A minimal Astro template styled with Pico CSS",
+  title: "jumpbit",
+  description: "An IT related corporation",
   lang: "en",
   favicon: "/favicon.svg",
   og: {
     image: "/ogImage.png",
-    imageAlt: "Open Graph image for the smallworld Astro template",
+    imageAlt: "Small image about jumpbit",
     imageType: "image/png",
     imageWidth: "1200",
     imageHeight: "630",
