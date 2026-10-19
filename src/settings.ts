@@ -4,12 +4,10 @@
 type Config = {
   title: string;
   email: string;
-  company: {
+  operator: {
     name: string;
-    owner: string;
     street: string;
     town: string;
-    uid: string;
   };
   og: {
     image: string;
@@ -22,12 +20,11 @@ type Config = {
 export const siteConfig: Config = {
   title: "Jump Bit",
   email: "info@jumpbit.com",
-  company: {
-    name: "Jump Bit",
-    owner: "[Full name of the owner]",
+  // Jump Bit is a private website for now, so the legal notice names the private operator.
+  operator: {
+    name: "[Full name]",
     street: "[Street and number]",
     town: "[Postcode and town]",
-    uid: "[CHE-000.000.000, if registered]",
   },
   og: {
     image: "/og-image.png",

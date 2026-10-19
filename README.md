@@ -1,7 +1,7 @@
 # Jump Bit website
 
-Company website of Jump Bit: help with every kind of IT question, for private individuals,
-non-profit organisations and companies.
+Private website of Jump Bit, a non-commercial project that gives IT advice to non-profit
+organisations (associations, foundations, volunteer groups). Jump Bit is not a company yet.
 
 One codebase produces two static websites:
 
@@ -12,11 +12,11 @@ One codebase produces two static websites:
 
 Both sites use the same paths. The language switch in the header links to the same page on the other domain, and every page declares its counterpart with `hreflang`.
 
-Built with [Astro](https://docs.astro.build) and styled with the Jump Bit design system in `assets/` (`jumpbit-theme.css`, Inter font, logos and icons).
+Built with [Astro](https://docs.astro.build) 7 and styled with the Jump Bit design system in `assets/` (`jumpbit-theme.css`, Inter font, logos and icons).
 
 ## Prerequisites
 
-- Node.js 24 (pinned in `.nvmrc` and `mise.toml`)
+- Node.js 24.22.0, the current LTS release (pinned in `.nvmrc` and `mise.toml`)
 - npm (lock file: `package-lock.json`)
 
 ## Setup
@@ -56,7 +56,7 @@ The variables are validated by Astro at startup (`env.schema` in `astro.config.m
 | --- | --- |
 | `src/i18n/ui.ts` | All page text in English and German. The German dictionary is typed against the English one, so a missing translation fails `npm run check`. |
 | `src/i18n/index.ts` | Current language, language metadata and cross-domain links |
-| `src/settings.ts` | Site name, contact e-mail, company details for the legal notice, social image |
+| `src/settings.ts` | Site name, contact e-mail, operator details for the legal notice, social image |
 | `src/pages/` | Pages: home, about, contact, legal notice, privacy policy, blog, tags, 404, RSS |
 | `src/pages/[icon].ts`, `site.webmanifest.ts` | Publish the icons and social image from `assets/` and a localized web app manifest |
 | `src/content/blog/en/`, `src/content/blog/de/` | Blog posts. Use the same file name in both languages so the language switch finds the translation. |
@@ -69,10 +69,9 @@ Deploy `dist/en/` to jumpbit.com and `dist/de/` to jumpbit.ch. The hosting provi
 
 ## To do before going live
 
-- [ ] Replace the placeholders in `[square brackets]` in `src/settings.ts` (owner, address, UID) and in the privacy policy in `src/i18n/ui.ts` (hosting provider, log retention, AI providers), then have the legal notice and privacy policy reviewed.
+- [ ] Replace the placeholders in `[square brackets]` in `src/settings.ts` (name and address) and in the privacy policy in `src/i18n/ui.ts` (hosting provider, log retention, AI providers), then have the legal notice and privacy policy reviewed.
 - [ ] Decide on hosting and add a deployment workflow (GitHub Actions with OIDC, secrets in GitHub environments).
 - [ ] Add a CI workflow that runs `npm ci`, `npm run format:check` and `npm run build`.
-- [ ] Upgrade Astro to the current major version.
 
 ## License
 

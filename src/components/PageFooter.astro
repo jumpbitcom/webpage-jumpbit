@@ -1,5 +1,5 @@
 ---
-// Site footer: copyright, contact e-mail and links to the legal pages.
+// Site footer: copyright, project note, contact e-mail and links to the legal pages.
 import { siteConfig } from "~/settings";
 import { LOCALES, locale, t } from "~/i18n";
 
@@ -11,14 +11,20 @@ const domain = new URL(LOCALES[locale].siteUrl).host;
   <div class="container site-footer__inner">
     <p>
       &copy; 2024&ndash;{currentYear}
-      {siteConfig.title} &middot; {domain} &middot;
-      <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+      {siteConfig.title} &middot; {domain} &middot; {t.footer.note}
+      &middot; <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
     </p>
     <nav aria-label={t.footer.label}>
       <ul>
-        <li><a href="/contact/">{t.nav.contact}</a></li>
-        <li><a href="/legal/">{t.footer.legal}</a></li>
-        <li><a href="/privacy/">{t.footer.privacy}</a></li>
+        <li>
+          <a href="/contact/">{t.nav.contact}</a>
+        </li>
+        <li>
+          <a href="/legal/">{t.footer.legal}</a>
+        </li>
+        <li>
+          <a href="/privacy/">{t.footer.privacy}</a>
+        </li>
       </ul>
     </nav>
   </div>
