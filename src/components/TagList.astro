@@ -11,12 +11,10 @@ const { tags } = Astro.props;
 
 <nav class="tag-list" aria-label={t.blog.tags}>
   <ul>
-    {
-      tags.map((tag) => (
-        <li>
-          <TagLink tag={tag} />
-        </li>
-      ))
-    }
+    {tags.map((tag) => (
+      <li>
+        <TagLink tag={tag} />
+      </li>
+    ))}
   </ul>
 </nav>

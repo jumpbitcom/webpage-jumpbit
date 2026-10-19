@@ -14,18 +14,16 @@ const lastUpdated = new Date("2026-10-19");
   <article class="container page">
     <h1>{privacy.heading}</h1>
     <p class="lead">{privacy.lead}</p>
-    {
-      privacy.sections.map(({ heading, paragraphs }) => (
-        <section>
-          <h2>{heading}</h2>
-          {paragraphs.map((paragraph) => (
-            <p>{paragraph}</p>
-          ))}
-        </section>
-      ))
-    }
+    {privacy.sections.map(({ heading, paragraphs }) => (
+      <section>
+        <h2>{heading}</h2>
+        {paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </section>
+    ))}
     <p>
-      {siteConfig.company.name},
+      {siteConfig.title},
       <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
     </p>
     <p class="text-muted">
