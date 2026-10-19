@@ -63,7 +63,7 @@ jobs:
           chmod 600 "$HOME/.ssh/hostpoint_deploy"
           ssh-keygen -y -P '' -f "$HOME/.ssh/hostpoint_deploy" > /dev/null
           printf '%s\n' "$HOSTPOINT_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
-          lftp --user "$HOSTPOINT_USERNAME" --password '' "sftp://$HOSTPOINT_HOST" <<'LFTP'
+          lftp -u "$HOSTPOINT_USERNAME," "sftp://$HOSTPOINT_HOST" <<'LFTP'
           set cmd:fail-exit yes
           set net:max-retries 2
           set net:timeout 20
