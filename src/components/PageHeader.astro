@@ -1,20 +1,73 @@
 ---
+// Site header: logo, main navigation and language switch.
+import { getImage } from "astro:assets";
+import logoBlack from "@assets/jumpbitlogo.png";
+import logoWhite from "@assets/jumpbitlogoweiss.png";
+import LanguageSwitch from "@components/LanguageSwitch.astro";
+import { siteConfig } from "~/settings";
+import { t } from "~/i18n";
 
+interface Props {
+  alternatePath: string;
+}
+
+const { alternatePath } = Astro.props;
+
+// The black logo is for light grounds, the white one for dark grounds (brand rule).
+const logoWidth = 240;
+const logoLight = await getImage({
+  src: logoBlack,
+  width: logoWidth,
+  format: "webp",
+});
+const logoDark = await getImage({
+  src: logoWhite,
+  width: logoWidth,
+  format: "webp",
+});
+
+const links = [
+  { href: "/", label: t.nav.home },
+  { href: "/about/", label: t.nav.about },
+  { href: "/blog/", label: t.nav.blog },
+  { href: "/contact/", label: t.nav.contact },
+];
+
+const path = Astro.url.pathname.replace(/\/?$/, "/");
+const isCurrent = (href: string): boolean =>
+  href === "/" ? path === "/" : path.startsWith(href);
 ---
 
-<header>
-  <nav aria-label="Main">
-    <ul>
-      <li>
-        <a href="/">
-          <strong>jumpbit</strong>
-        </a>
-      </li>
-    </ul>
-    <ul>
-      <li><a href="/about">About</a></li>
-      <li><a href="/blog">Blog</a></li>
-      {/* Add other navbar entries here */}
-    </ul>
-  </nav>
+<a class="skip-link" href="#main">{t.nav.skip}</a>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo">
+      <picture>
+        <source srcset={logoDark.src} media="(prefers-color-scheme: dark)" />
+        <img
+          src={logoLight.src}
+          alt={`${siteConfig.title}: ${t.nav.home}`}
+          width={logoWidth}
+          height={Math.round((logoWidth * logoBlack.height) / logoBlack.width)}
+        />
+      </picture>
+    </a>
+    <nav aria-label={t.nav.label}>
+      <ul>
+        {
+          links.map(({ href, label }) => (
+            <li>
+              <a
+                href={href}
+                aria-current={isCurrent(href) ? "page" : undefined}
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <LanguageSwitch alternatePath={alternatePath} />
+  </div>
 </header>

@@ -1,88 +1,79 @@
-# smallworld
+# Jump Bit website
 
-_This is a template for the static site generator [Astro](https://astro.build/)._
+Company website of Jump Bit: help with every kind of IT question, for private individuals,
+non-profit organisations and companies.
 
-I like Astro, but I don't like spending hours messing with customizations I don't need. This template is based on a few key principles for my own site:
+One codebase produces two static websites:
 
-- I wanted a basic website with a single-author blog.
-- The website should incorporate accessible and usable elements.
-- Complex systems should be avoided in favor of simpler ones.
-- I should be able to easily understand what I see.
+| Domain | Language | Output |
+| --- | --- | --- |
+| [jumpbit.com](https://jumpbit.com) | English | `dist/en/` |
+| [jumpbit.ch](https://jumpbit.ch) | German (Swiss spelling) | `dist/de/` |
 
-The result is an Astro template that heavily limits the use of CSS classes, and maximizes the use of semantic HTML.
+Both sites use the same paths. The language switch in the header links to the same page on the other domain, and every page declares its counterpart with `hreflang`.
 
-## Quickstart
+Built with [Astro](https://docs.astro.build) and styled with the Jump Bit design system in `assets/` (`jumpbit-theme.css`, Inter font, logos and icons).
 
-```shell
-npm create astro@latest -- --template anaxite/astro-smallworld
-cd astro-smallworld
-npm run dev
-npm run build
-```
+## Prerequisites
 
-## Less quick start
+- Node.js 24 (pinned in `.nvmrc` and `mise.toml`)
+- npm (lock file: `package-lock.json`)
 
-### Install
-
-1. Install Astro.
+## Setup
 
 ```shell
-npm create astro@latest -- --template anaxite/astro-smallworld
+npm ci
+cp .env.example .env   # optional, only for local overrides
 ```
 
-2. Install this template's dependencies, if you didn't already.
+## Commands
 
-```shell
-cd <install-directory>
-npm install
-```
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | English dev server on http://localhost:4321 |
+| `npm run dev:de` | German dev server on http://localhost:4322 |
+| `npm run check` | Type and template check (`astro check`) |
+| `npm run build` | Check, then build both sites into `dist/en/` and `dist/de/` |
+| `npm run build:en` / `build:de` | Build one site |
+| `npm run preview` / `preview:de` | Serve the built English or German site |
+| `npm run format` / `format:check` | Format or check the sources with Prettier |
 
-3. Run the template in preview mode, or build the final output.
+To test the language switch locally, run both dev servers and set `SITE_URL_EN=http://localhost:4321` and `SITE_URL_DE=http://localhost:4322` in `.env`.
 
-```shell
-npm run dev
-npm run build
-```
+## Configuration
 
-4. Optionally, format your source files with Prettier.
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `SITE_LOCALE` | `en` | Language of the build (`en` or `de`). Set by the npm scripts. |
+| `SITE_URL_EN` | `https://jumpbit.com` | Base URL of the English site |
+| `SITE_URL_DE` | `https://jumpbit.ch` | Base URL of the German site |
 
-```shell
-npm run format
-```
+The variables are validated by Astro at startup (`env.schema` in `astro.config.mjs`). None of them is secret.
 
-If you use mise-en-place for your tooling, this project comes with a mise configuration file.
+## Project structure
 
-### Configure site settings
+| Path | Content |
+| --- | --- |
+| `src/i18n/ui.ts` | All page text in English and German. The German dictionary is typed against the English one, so a missing translation fails `npm run check`. |
+| `src/i18n/index.ts` | Current language, language metadata and cross-domain links |
+| `src/settings.ts` | Site name, contact e-mail, company details for the legal notice, social image |
+| `src/pages/` | Pages: home, about, contact, legal notice, privacy policy, blog, tags, 404, RSS |
+| `src/pages/[icon].ts`, `site.webmanifest.ts` | Publish the icons and social image from `assets/` and a localized web app manifest |
+| `src/content/blog/en/`, `src/content/blog/de/` | Blog posts. Use the same file name in both languages so the language switch finds the translation. |
+| `src/styles/site.css` | Page layout on top of `assets/jumpbit-theme.css` |
+| `assets/` | Jump Bit design system: tokens, theme, fonts, logos, icons |
 
-Site-wide settings are stored in `src/settings.ts`. This is also where you can set the favicon file name, and Open Graph image settings.
+## Deployment
 
-### Configure CSS
+Deploy `dist/en/` to jumpbit.com and `dist/de/` to jumpbit.ch. The hosting provider is not decided yet.
 
-The file `src/styles/main.scss` controls which CSS elements Pico CSS includes in the final site. See [the Pico CSS website](https://picocss.com/docs/sass) for information about these elements. 
+## To do before going live
 
-> Building your project may show deprecation warnings due to how Pico CSS writes its SASS files. These warnings are non-fatal and can be ignored for now.. 
+- [ ] Replace the placeholders in `[square brackets]` in `src/settings.ts` (owner, address, UID) and in the privacy policy in `src/i18n/ui.ts` (hosting provider, log retention, AI providers), then have the legal notice and privacy policy reviewed.
+- [ ] Decide on hosting and add a deployment workflow (GitHub Actions with OIDC, secrets in GitHub environments).
+- [ ] Add a CI workflow that runs `npm ci`, `npm run format:check` and `npm run build`.
+- [ ] Upgrade Astro to the current major version.
 
-### Add and edit pages
+## License
 
-Create your static pages as `.astro` files under `src/pages`. The template includes an index page with the most recent blog posts, an About page, and a 404 page.
-
-Use the Base layout to wrap your content in semantically-correct `<main>` tags. The Base layout also takes `title` and `description` attributes that supplement the main site title and description. If you want your content to have a nice border, I recommend you wrap it in `<article>` tags to benefit from Pico CSS styling.
-
-To start with a basic page template, see the file in `src/templates`.
-
-### Navigation
-
-To add a page to the site navigation, edit the `PageHeader.astro` component directly.
-
-### Blog
-
-smallworld comes with a blog collection by default. To add a new post, create a Markdown file in the `src/content/blog` directory or one of its subdirectories. The path and file name becomes the post URL.
-
-A post must have `title`, `description` and `pubDate` keywords in its frontmatter. `tags` are optional.
-
-To see a post template, see the file in `src/templates`.
-
-
-## About Astro
-
-Want to learn more about Astro? Check out [their documentation](https://docs.astro.build) or jump into their [Discord server](https://astro.build/chat).
+The source code is based on the MIT-licensed [astro-smallworld](https://github.com/anaxite/astro-smallworld) template (see `LICENSE`). The Jump Bit name, logos and texts are not covered by that license.

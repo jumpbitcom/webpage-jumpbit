@@ -2,23 +2,24 @@
 import type { CollectionEntry } from "astro:content";
 import TagList from "@components/TagList.astro";
 import FormattedDate from "@components/FormattedDate.astro";
+import { t } from "~/i18n";
 
 type Props = CollectionEntry<"blog">["data"];
 
 const { title, pubDate, tags } = Astro.props;
 ---
 
-<article>
+<article class="container page">
   <header>
     <h1>{title}</h1>
-    <FormattedDate date={pubDate} />
+    <p class="text-muted"><FormattedDate date={pubDate} /></p>
   </header>
   <slot />
 
   {
     tags && (
       <footer>
-        <h4>Tags</h4>
+        <h2>{t.blog.tags}</h2>
         <TagList tags={tags} />
       </footer>
     )

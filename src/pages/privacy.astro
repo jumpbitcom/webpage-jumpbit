@@ -1,0 +1,36 @@
+---
+// Privacy policy under the Swiss Federal Act on Data Protection (FADP / DSG).
+import Base from "@layouts/Base.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+import { siteConfig } from "~/settings";
+import { t } from "~/i18n";
+
+const { privacy } = t;
+// Update when the policy text changes.
+const lastUpdated = new Date("2026-10-19");
+---
+
+<Base title={privacy.title} description={privacy.lead}>
+  <article class="container page">
+    <h1>{privacy.heading}</h1>
+    <p class="lead">{privacy.lead}</p>
+    {
+      privacy.sections.map(({ heading, paragraphs }) => (
+        <section>
+          <h2>{heading}</h2>
+          {paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </section>
+      ))
+    }
+    <p>
+      {siteConfig.company.name},
+      <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+    </p>
+    <p class="text-muted">
+      {privacy.lastUpdated}
+      <FormattedDate date={lastUpdated} />
+    </p>
+  </article>
+</Base>

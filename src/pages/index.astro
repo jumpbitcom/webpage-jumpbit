@@ -1,19 +1,86 @@
 ---
+// Home page: brand hero, audiences, services, how Jump Bit works and the latest posts.
+import { Image } from "astro:assets";
+import logoWhite from "@assets/jumpbitlogoweiss.png";
 import Base from "@layouts/Base.astro";
 import RecentPosts from "@components/RecentPosts.astro";
+import { t } from "~/i18n";
+
+const { home } = t;
 ---
 
 <Base>
-  <article>
-    <header><h1>jumpbit</h1></header>
-    <p>
-      <img src="/jumpbitlogoweiss.png">
-    </p>
-    <p>This site will soon start off. Till then not further information is provided, but the context
-      of this site is around IT services, software development and consulting using latest technologies.</p>
-    </p>
+  <section class="hero landing" aria-labelledby="hero-heading">
+    <div class="logo">
+      <Image
+        src={logoWhite}
+        alt="Jump Bit: Empower your IT"
+        width={420}
+        loading="eager"
+      />
+    </div>
+    <h1 id="hero-heading">{home.heading}</h1>
+    <p class="lead">{home.lead}</p>
+    <div class="actions">
+      <a href="/contact/" class="btn">{home.ctaPrimary}</a>
+      <a href="/about/" class="btn btn-outline">{home.ctaSecondary}</a>
+    </div>
+  </section>
 
-  </article>
-  <hr />
-  <RecentPosts />
+  <div class="container">
+    <section class="section" aria-labelledby="audience-heading">
+      <h2 id="audience-heading">{home.audience.heading}</h2>
+      <ul class="grid">
+        {
+          home.audience.items.map(({ title, text }) => (
+            <li class="card">
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="section" aria-labelledby="services-heading">
+      <h2 id="services-heading">{home.services.heading}</h2>
+      <ul class="grid">
+        {
+          home.services.items.map(({ title, text }) => (
+            <li class="card">
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="section" aria-labelledby="team-heading">
+      <div class="panel">
+        <h2 id="team-heading">{home.team.heading}</h2>
+        <p>{home.team.text}</p>
+        <a href="/about/">{home.team.link}</a>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="steps-heading">
+      <h2 id="steps-heading">{home.steps.heading}</h2>
+      <ol class="grid steps">
+        {
+          home.steps.items.map(({ title, text }) => (
+            <li class="card">
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="section-cta">
+        <a href="/contact/" class="btn">{home.ctaPrimary}</a>
+      </p>
+    </section>
+
+    <RecentPosts />
+  </div>
 </Base>

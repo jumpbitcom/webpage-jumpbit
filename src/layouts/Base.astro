@@ -1,6 +1,9 @@
 ---
-import "@styles/main.scss";
+// Page frame for every page: head metadata, header, main content and footer.
+import "@assets/jumpbit-theme.css";
+import "@styles/site.css";
 import { siteConfig } from "~/settings";
+import { LOCALES, locale } from "~/i18n";
 
 import PageHead from "@components/PageHead.astro";
 import PageHeader from "@components/PageHeader.astro";
@@ -10,29 +13,31 @@ interface Props {
   title?: string;
   description?: string;
   ogType?: "website" | "article";
+  /** Path of this page on the other language's website; defaults to the same path. */
+  alternatePath?: string;
 }
 
-const { title, description, ogType = "website" } = Astro.props;
+const {
+  title,
+  description,
+  ogType = "website",
+  alternatePath = Astro.url.pathname,
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={LOCALES[locale].htmlLang}>
   <PageHead
     title={title ? `${title} | ${siteConfig.title}` : siteConfig.title}
-    description={description ? description : siteConfig.description}
+    description={description}
     ogType={ogType}
+    alternatePath={alternatePath}
   />
-  <body class="container">
-    <PageHeader />
-    <main>
+  <body>
+    <PageHeader alternatePath={alternatePath} />
+    <main id="main" tabindex="-1">
       <slot />
     </main>
     <PageFooter />
   </body>
 </html>
-{/* CSS required to keep footer at the bottom of the page */}
-<style>
-  .container {
-    height: 100vh;
-  }
-</style>

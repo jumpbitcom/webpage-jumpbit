@@ -1,11 +1,16 @@
 ---
+// A date shown in the format of the current language; dates are stored and compared in UTC.
+import { LOCALES, locale } from "~/i18n";
+
 interface Props {
   date: Date;
 }
 
 const { date } = Astro.props;
+const formatted = date.toLocaleDateString(LOCALES[locale].htmlLang, {
+  dateStyle: "long",
+  timeZone: "UTC",
+});
 ---
 
-<time datetime={date.toISOString()}>
-  {date.toISOString().substring(0, 10)}
-</time>
+<time datetime={date.toISOString().substring(0, 10)}>{formatted}</time>

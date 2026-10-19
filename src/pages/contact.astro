@@ -1,0 +1,32 @@
+---
+// Contact page. There is no form: the site is static and e-mail needs no backend.
+import Base from "@layouts/Base.astro";
+import { siteConfig } from "~/settings";
+import { t } from "~/i18n";
+
+const { contact } = t;
+---
+
+<Base title={contact.title} description={contact.lead}>
+  <article class="container page">
+    <h1>{contact.heading}</h1>
+    <p class="lead">{contact.lead}</p>
+    <p>
+      {contact.emailLabel}:
+      <a href={`mailto:${siteConfig.email}`}
+        ><strong>{siteConfig.email}</strong></a
+      >
+    </p>
+
+    <section class="card">
+      <h2>{contact.tipsHeading}</h2>
+      <ul>
+        {contact.tips.map((tip) => <li>{tip}</li>)}
+      </ul>
+      <p>
+        <strong class="text-warning">{contact.warningLabel}</strong>
+        {contact.warning}
+      </p>
+    </section>
+  </article>
+</Base>
