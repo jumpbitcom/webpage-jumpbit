@@ -1,0 +1,77 @@
+name: Deploy to Hostpoint
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hostpoint-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    environment: production
+    timeout-minutes: 20
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Build both websites
+        run: npm run build
+
+      - name: Install SFTP client
+        run: sudo -n apt-get update && sudo -n apt-get install --yes lftp
+
+      - name: Replace website over SFTP
+        shell: bash
+        env:
+          HOSTPOINT_HOST: ${{ secrets.HOSTPOINT_HOST }}
+          HOSTPOINT_USERNAME: ${{ secrets.HOSTPOINT_USERNAME }}
+          HOSTPOINT_PRIVATE_KEY: ${{ secrets.HOSTPOINT_PRIVATE_KEY }}
+          HOSTPOINT_KNOWN_HOSTS: ${{ secrets.HOSTPOINT_KNOWN_HOSTS }}
+        run: |
+          set -Eeuo pipefail
+          : "${HOSTPOINT_HOST:?Missing HOSTPOINT_HOST secret}"
+          : "${HOSTPOINT_USERNAME:?Missing HOSTPOINT_USERNAME secret}"
+          : "${HOSTPOINT_PRIVATE_KEY:?Missing HOSTPOINT_PRIVATE_KEY secret}"
+          : "${HOSTPOINT_KNOWN_HOSTS:?Missing HOSTPOINT_KNOWN_HOSTS secret}"
+          [[ "$HOSTPOINT_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]]
+          [[ -s dist/en/index.html && -s dist/de/index.html ]]
+          umask 077
+          mkdir -p "$HOME/.ssh"
+          trap 'rm -f -- "$HOME/.ssh/hostpoint_deploy"' EXIT
+          printf '%s\n' "$HOSTPOINT_PRIVATE_KEY" > "$HOME/.ssh/hostpoint_deploy"
+          chmod 600 "$HOME/.ssh/hostpoint_deploy"
+          ssh-keygen -y -P '' -f "$HOME/.ssh/hostpoint_deploy" > /dev/null
+          printf '%s\n' "$HOSTPOINT_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          lftp --user "$HOSTPOINT_USERNAME," "sftp://$HOSTPOINT_HOST" <<'LFTP'
+          set cmd:fail-exit yes
+          set net:max-retries 2
+          set net:timeout 20
+          set sftp:connect-program "ssh -a -x -i ~/.ssh/hostpoint_deploy -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes"
+          mkdir -p ~/www/jumpbit
+          cd ~/www
+          rm -r jumpbit
+          mkdir jumpbit
+          mirror --reverse dist/ jumpbit/
+          bye
+          LFTP

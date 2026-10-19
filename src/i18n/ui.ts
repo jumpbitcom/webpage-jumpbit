@@ -173,7 +173,7 @@ const en = {
       {
         heading: "Visiting this website",
         paragraphs: [
-          "This website uses no cookies, no tracking and no analytics tools, and it loads no content from third parties. Fonts are served from this website.",
+          "This website uses no cookies, no tracking and no analytics tools, no fingerprinting, and it loads no content from third parties. Fonts are served from this website.",
           "The website is hosted by [hosting provider, country]. When you visit it, the hosting provider records technical data such as IP address, date and time, the page requested and the browser used in server log files. This is needed to deliver the website securely. The log files are deleted after [retention period].",
         ],
       },

@@ -65,12 +65,48 @@ The variables are validated by Astro at startup (`env.schema` in `astro.config.m
 
 ## Deployment
 
-Deploy `dist/en/` to jumpbit.com and `dist/de/` to jumpbit.ch. The hosting provider is not decided yet.
+Pushing any Git tag triggers [the Hostpoint deployment workflow](.github/workflows/deploy.yml).
+It runs `npm ci`, `npm run format:check` and `npm run build`, then replaces
+`~/www/jumpbit` over SFTP (port 22) with the contents of `dist/`.
+The domain document roots on Hostpoint must point to `~/www/jumpbit/en` for
+jumpbit.com and `~/www/jumpbit/de` for jumpbit.ch.
+
+Create a GitHub environment named `production` in the repository settings, configure
+required reviewers and permitted deployment tags, and add these environment secrets:
+
+| Secret | Value |
+| --- | --- |
+| `HOSTPOINT_HOST` | Hostpoint SSH/SFTP server hostname, without a protocol or path |
+| `HOSTPOINT_USERNAME` | SSH/SFTP account username whose home contains `www/` |
+| `HOSTPOINT_PRIVATE_KEY` | Complete dedicated SSH private key, including its header, footer and line breaks, without a passphrase |
+| `HOSTPOINT_KNOWN_HOSTS` | Complete OpenSSH `known_hosts` entry for that hostname, verified against Hostpoint's published SSH host-key fingerprint or through Hostpoint support |
+
+Enable SSH/SFTP access for the account in Hostpoint first and authorize the
+matching public key in that user's `~/.ssh/authorized_keys` (or through Hostpoint's
+SSH key management). Use a dedicated deployment key, never a personal key, and
+store only the private key in the GitHub secret, not in the repository. The
+workflow validates the key before connecting and removes its temporary copy on exit.
+Password login is not used; the old `HOSTPOINT_PASSWORD` secret can be removed.
+Do not trust an unverified `ssh-keyscan` result or disable host-key checking.
+
+For example, after committing and pushing the website changes:
+
+```shell
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Deployments are serialized and an active upload is not cancelled by another tag.
+All build checks and local output checks must pass before remote files are deleted.
+**Everything previously in `~/www/jumpbit` is deleted before uploading**, including
+hidden files and any manually uploaded content. The site is unavailable during
+the upload; a failed transfer can leave it incomplete. To roll back, tag a known-good
+commit with a new tag and push that tag to redeploy it.
 
 ## To do before going live
 
 - [ ] Replace the placeholders in `[square brackets]` in `src/settings.ts` (name and address) and in the privacy policy in `src/i18n/ui.ts` (hosting provider, log retention, AI providers), then have the legal notice and privacy policy reviewed.
-- [ ] Decide on hosting and add a deployment workflow (GitHub Actions with OIDC, secrets in GitHub environments).
+- [ ] Configure the Hostpoint document roots, enable SFTP access, and add the `production` environment secrets and deployment protection rules. Hostpoint SFTP uses account credentials, not GitHub OIDC.
 - [ ] Add a CI workflow that runs `npm ci`, `npm run format:check` and `npm run build`.
 
 ## License

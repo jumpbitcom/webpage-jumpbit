@@ -22,9 +22,9 @@ export const siteConfig: Config = {
   email: "info@jumpbit.com",
   // Jump Bit is a private website for now, so the legal notice names the private operator.
   operator: {
-    name: "[Full name]",
-    street: "[Street and number]",
-    town: "[Postcode and town]",
+    name: "Martin",
+    street: "n/a",
+    town: "n/a",
   },
   og: {
     image: "/og-image.png",
