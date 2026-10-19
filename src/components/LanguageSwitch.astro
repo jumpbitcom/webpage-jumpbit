@@ -1,0 +1,41 @@
+---
+// Switches between the English (jumpbit.com) and German (jumpbit.ch) website,
+// keeping the visitor on the same page.
+import { LOCALES, locale, localizedUrl, t, type Locale } from "~/i18n";
+
+interface Props {
+  alternatePath: string;
+}
+
+const { alternatePath } = Astro.props;
+const order: readonly Locale[] = ["de", "en"];
+---
+
+<nav class="language-switch" aria-label={t.nav.language}>
+  <ul>
+    {
+      order.map((code) => {
+        const { htmlLang, label } = LOCALES[code];
+        return (
+          <li>
+            {code === locale ? (
+              <span aria-current="true" lang={htmlLang} title={label}>
+                {code.toUpperCase()}
+              </span>
+            ) : (
+              <a
+                href={localizedUrl(code, alternatePath)}
+                hreflang={htmlLang}
+                lang={htmlLang}
+                title={t.nav.switchTo}
+                aria-label={label}
+              >
+                {code.toUpperCase()}
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>

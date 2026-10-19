@@ -1,18 +1,33 @@
 ---
-import { type CollectionEntry, getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import Base from "@layouts/Base.astro";
 import BlogPost from "@layouts/BlogPost.astro";
+import { getPosts, type Post } from "~/lib/blog";
+import { otherLocale } from "~/i18n";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
+  const posts = await getPosts();
+  // The language switch links to the translated post, or to the blog index if there is none.
+  const translated = new Set(
+    (await getPosts(otherLocale)).map((post) => post.slug),
+  );
   return posts.map((post) => ({
-    params: { id: post.id },
-    props: post,
+    params: { id: post.slug },
+    props: {
+      post,
+      alternatePath: translated.has(post.slug)
+        ? `/blog/${post.slug}/`
+        : "/blog/",
+    },
   }));
 }
-type Props = CollectionEntry<"blog">;
 
-const post = Astro.props;
+interface Props {
+  post: Post;
+  alternatePath: string;
+}
+
+const { post, alternatePath } = Astro.props;
 const { Content } = await render(post);
 ---
 
@@ -20,6 +35,7 @@ const { Content } = await render(post);
   title={post.data.title}
   description={post.data.description}
   ogType="article"
+  alternatePath={alternatePath}
 >
   <BlogPost {...post.data}>
     <Content />

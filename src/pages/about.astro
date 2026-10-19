@@ -1,10 +1,25 @@
 ---
+// About page: the Jump Bit story.
 import Base from "@layouts/Base.astro";
+import { t } from "~/i18n";
+
+const { about } = t;
 ---
 
-<Base title="About" , description="jumpbit corporation">
-  <article>
-    <header><h1>About jumptbit</h1></header>
-    <p>It will soon start off.</p>
+<Base title={about.title} description={about.lead}>
+  <article class="container page">
+    <h1>{about.heading}</h1>
+    <p class="lead">{about.lead}</p>
+    {
+      about.sections.map(({ heading, paragraphs }) => (
+        <section>
+          <h2>{heading}</h2>
+          {paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </section>
+      ))
+    }
+    <p><a href="/contact/" class="btn">{t.home.ctaPrimary}</a></p>
   </article>
 </Base>

@@ -1,0 +1,39 @@
+---
+// Legal notice (Impressum), required for Swiss commercial websites (UWG Art. 3 para. 1 lit. s).
+import Base from "@layouts/Base.astro";
+import { siteConfig } from "~/settings";
+import { t } from "~/i18n";
+
+const { legal } = t;
+const { company } = siteConfig;
+---
+
+<Base title={legal.title}>
+  <article class="container page">
+    <h1>{legal.heading}</h1>
+    <section>
+      <h2>{legal.companyHeading}</h2>
+      <address>
+        {company.name}<br />
+        {company.owner}<br />
+        {company.street}<br />
+        {company.town}<br />
+        {legal.country}<br />
+        {legal.emailLabel}: <a href={`mailto:${siteConfig.email}`}
+          >{siteConfig.email}</a
+        >
+      </address>
+      <p>{legal.uidLabel}: {company.uid}</p>
+    </section>
+    {
+      legal.sections.map(({ heading, paragraphs }) => (
+        <section>
+          <h2>{heading}</h2>
+          {paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </section>
+      ))
+    }
+  </article>
+</Base>

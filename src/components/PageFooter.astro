@@ -1,20 +1,25 @@
 ---
+// Site footer: copyright, contact e-mail and links to the legal pages.
+import { siteConfig } from "~/settings";
+import { LOCALES, locale, t } from "~/i18n";
+
 const currentYear = new Date().getFullYear();
+const domain = new URL(LOCALES[locale].siteUrl).host;
 ---
 
-<footer>
-  <p>&copy; 2024-{currentYear} info@jumpbit.com</p>
-  <nav>    <ul>
-    <li><a href="/about">About</a></li>
-    <li><a href="/blog">Blogs</a></li>
-    {/* Add other navbar entries here */}
-  </ul>
-</nav>
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p>
+      &copy; 2024&ndash;{currentYear}
+      {siteConfig.title} &middot; {domain} &middot;
+      <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+    </p>
+    <nav aria-label={t.footer.label}>
+      <ul>
+        <li><a href="/contact/">{t.nav.contact}</a></li>
+        <li><a href="/legal/">{t.footer.legal}</a></li>
+        <li><a href="/privacy/">{t.footer.privacy}</a></li>
+      </ul>
+    </nav>
+  </div>
 </footer>
-{/* CSS required to keep footer at the bottom of the page */}
-<style>
-  footer {
-    position: sticky;
-    top: 100vh;
-  }
-</style>

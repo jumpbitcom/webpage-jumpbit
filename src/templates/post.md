@@ -19,4 +19,4 @@ Fill out the frontmatter:
 
 Next, write your post text under the frontmatter.
 
-Save the resulting file under `src/content/blog`. Subdirectories are optional.
+Save the file under `src/content/blog/en/` (English, jumpbit.com) or `src/content/blog/de/` (German, jumpbit.ch). Use the same file name for both languages so the language switch finds the translation.

@@ -1,50 +1,80 @@
 ---
+// Document head: metadata, icons, language alternates and Open Graph tags.
 import { siteConfig } from "~/settings";
+import { LOCALES, locale, localizedUrl, otherLocale, t } from "~/i18n";
 
 interface Props {
   title: string;
-  description?: string;
+  description?: string | undefined;
   ogType?: "website" | "article";
+  alternatePath: string;
 }
-
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const socialImageURL = new URL(siteConfig.og.image, Astro.url);
 
 const {
   title,
-  description = siteConfig.description,
+  description = t.meta.description,
   ogType = "website",
+  alternatePath,
 } = Astro.props;
+
+const canonicalURL = localizedUrl(locale, Astro.url.pathname);
+const alternateURL = localizedUrl(otherLocale, alternatePath);
+const socialImageURL = localizedUrl(locale, siteConfig.og.image);
 ---
 
 <head>
-  {/* Global Metadata */}
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" type="image/svg+xml" href={siteConfig.favicon} />
   <meta name="generator" content={Astro.generator} />
-  <link rel="canonical" href={canonicalURL} />
-  {/* Primary Meta Tags */}
   <title>{title}</title>
-  <meta name="title" content={title} />
   <meta name="description" content={description} />
-  {/* RSS */}
+  <link rel="canonical" href={canonicalURL} />
+
+  {/* Language versions: jumpbit.com (English) and jumpbit.ch (German) */}
+  <link
+    rel="alternate"
+    hreflang={LOCALES[locale].htmlLang}
+    href={canonicalURL}
+  />
+  <link
+    rel="alternate"
+    hreflang={LOCALES[otherLocale].htmlLang}
+    href={alternateURL}
+  />
+  <link
+    rel="alternate"
+    hreflang="x-default"
+    href={locale === "en" ? canonicalURL : alternateURL}
+  />
+
+  {/* Icons */}
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#323232" />
+
   <link
     rel="alternate"
     type="application/rss+xml"
-    title={title}
-    href={new URL("rss.xml", Astro.site)}
+    title={siteConfig.title}
+    href={localizedUrl(locale, "/rss.xml")}
   />
+
   {/* Open Graph */}
   <meta property="og:url" content={canonicalURL} />
   <meta property="og:type" content={ogType} />
   <meta property="og:site_name" content={siteConfig.title} />
-  <meta property="og:description" content={description} />
+  <meta property="og:locale" content={LOCALES[locale].ogLocale} />
+  <meta
+    property="og:locale:alternate"
+    content={LOCALES[otherLocale].ogLocale}
+  />
   <meta property="og:title" content={title} />
-
+  <meta property="og:description" content={description} />
   <meta property="og:image" content={socialImageURL} />
   <meta property="og:image:type" content={siteConfig.og.imageType} />
-  <meta property="og:image:alt" content={siteConfig.og.imageAlt} />
+  <meta property="og:image:alt" content={t.meta.ogImageAlt} />
   <meta property="og:image:width" content={siteConfig.og.imageWidth} />
   <meta property="og:image:height" content={siteConfig.og.imageHeight} />
 </head>
