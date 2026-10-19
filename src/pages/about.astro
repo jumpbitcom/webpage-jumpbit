@@ -10,16 +10,18 @@ const { about } = t;
   <article class="container page">
     <h1>{about.heading}</h1>
     <p class="lead">{about.lead}</p>
-    {
-      about.sections.map(({ heading, paragraphs }) => (
-        <section>
-          <h2>{heading}</h2>
-          {paragraphs.map((paragraph) => (
-            <p>{paragraph}</p>
-          ))}
-        </section>
-      ))
-    }
-    <p><a href="/contact/" class="btn">{t.home.ctaPrimary}</a></p>
+    {about.sections.map(({ heading, paragraphs }) => (
+      <section>
+        <h2>{heading}</h2>
+        {paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </section>
+    ))}
+    <p>
+      <a href="/contact/" class="btn">
+        {t.home.ctaPrimary}
+      </a>
+    </p>
   </article>
 </Base>

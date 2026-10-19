@@ -8,23 +8,21 @@ const maxPostsToDisplay = 3;
 const recentPosts = (await getPosts()).slice(0, maxPostsToDisplay);
 ---
 
-{
-  recentPosts.length > 0 && (
-    <section class="section" aria-labelledby="recent-posts-heading">
-      <h2 id="recent-posts-heading">{t.home.recentPosts}</h2>
-      <ul class="grid">
-        {recentPosts.map((post) => (
-          <li class="card">
-            <h3>
-              <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
-            </h3>
-            <p>
-              <FormattedDate date={post.data.pubDate} />
-            </p>
-            <p>{post.data.description}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-}
+{recentPosts.length > 0 && (
+  <section class="section" aria-labelledby="recent-posts-heading">
+    <h2 id="recent-posts-heading">{t.home.recentPosts}</h2>
+    <ul class="grid">
+      {recentPosts.map((post) => (
+        <li class="card">
+          <h3>
+            <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+          </h3>
+          <p>
+            <FormattedDate date={post.data.pubDate} />
+          </p>
+          <p>{post.data.description}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

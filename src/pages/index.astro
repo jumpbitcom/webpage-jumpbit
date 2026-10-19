@@ -22,8 +22,12 @@ const { home } = t;
     <h1 id="hero-heading">{home.heading}</h1>
     <p class="lead">{home.lead}</p>
     <div class="actions">
-      <a href="/contact/" class="btn">{home.ctaPrimary}</a>
-      <a href="/about/" class="btn btn-outline">{home.ctaSecondary}</a>
+      <a href="/contact/" class="btn">
+        {home.ctaPrimary}
+      </a>
+      <a href="/about/" class="btn btn-outline">
+        {home.ctaSecondary}
+      </a>
     </div>
   </section>
 
@@ -31,28 +35,24 @@ const { home } = t;
     <section class="section" aria-labelledby="audience-heading">
       <h2 id="audience-heading">{home.audience.heading}</h2>
       <ul class="grid">
-        {
-          home.audience.items.map(({ title, text }) => (
-            <li class="card">
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </li>
-          ))
-        }
+        {home.audience.items.map(({ title, text }) => (
+          <li class="card">
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
       </ul>
     </section>
 
     <section class="section" aria-labelledby="services-heading">
       <h2 id="services-heading">{home.services.heading}</h2>
       <ul class="grid">
-        {
-          home.services.items.map(({ title, text }) => (
-            <li class="card">
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </li>
-          ))
-        }
+        {home.services.items.map(({ title, text }) => (
+          <li class="card">
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
       </ul>
     </section>
 
@@ -67,17 +67,17 @@ const { home } = t;
     <section class="section" aria-labelledby="steps-heading">
       <h2 id="steps-heading">{home.steps.heading}</h2>
       <ol class="grid steps">
-        {
-          home.steps.items.map(({ title, text }) => (
-            <li class="card">
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </li>
-          ))
-        }
+        {home.steps.items.map(({ title, text }) => (
+          <li class="card">
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
       </ol>
       <p class="section-cta">
-        <a href="/contact/" class="btn">{home.ctaPrimary}</a>
+        <a href="/contact/" class="btn">
+          {home.ctaPrimary}
+        </a>
       </p>
     </section>
 

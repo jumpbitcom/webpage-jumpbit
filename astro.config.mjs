@@ -20,6 +20,9 @@ const site =
 
 export default defineConfig({
   site,
+  // Keep HTML-aware whitespace handling (the default before Astro 7), so text next to
+  // inline elements such as links keeps its spaces.
+  compressHTML: true,
   outDir: `./dist/${locale}`,
   env: {
     schema: {

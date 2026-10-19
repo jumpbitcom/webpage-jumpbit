@@ -13,15 +13,17 @@ const { contact } = t;
     <p class="lead">{contact.lead}</p>
     <p>
       {contact.emailLabel}:
-      <a href={`mailto:${siteConfig.email}`}
-        ><strong>{siteConfig.email}</strong></a
-      >
+      <a href={`mailto:${siteConfig.email}`}>
+        <strong>{siteConfig.email}</strong>
+      </a>
     </p>
 
     <section class="card">
       <h2>{contact.tipsHeading}</h2>
       <ul>
-        {contact.tips.map((tip) => <li>{tip}</li>)}
+        {contact.tips.map((tip) => (
+          <li>{tip}</li>
+        ))}
       </ul>
       <p>
         <strong class="text-warning">{contact.warningLabel}</strong>
