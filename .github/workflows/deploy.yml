@@ -58,20 +58,24 @@ jobs:
           [[ -s dist/en/index.html && -s dist/de/index.html ]]
           umask 077
           mkdir -p "$HOME/.ssh"
-          trap 'rm -f -- "$HOME/.ssh/hostpoint_deploy"' EXIT
-          printf '%s\n' "$HOSTPOINT_PRIVATE_KEY" > "$HOME/.ssh/hostpoint_deploy"
-          chmod 600 "$HOME/.ssh/hostpoint_deploy"
-          ssh-keygen -y -P '' -f "$HOME/.ssh/hostpoint_deploy" > /dev/null
+          key="$HOME/.ssh/hostpoint_deploy"
+          trap 'rm -f -- "$key"' EXIT
+          printf '%s\n' "$HOSTPOINT_PRIVATE_KEY" > "$key"
+          chmod 600 "$key"
+          ssh-keygen -y -P '' -f "$key" > /dev/null
           printf '%s\n' "$HOSTPOINT_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
-          lftp -u "$HOSTPOINT_USERNAME," "sftp://$HOSTPOINT_HOST" <<'LFTP'
+          ssh_opts="-i $key -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes"
+          # Plain sftp first: it prints the real ssh error, which lftp hides behind "max-retries exceeded".
+          # shellcheck disable=SC2086 # ssh_opts is intentionally word-split
+          printf 'pwd\n' | sftp -b - $ssh_opts "$HOSTPOINT_USERNAME@$HOSTPOINT_HOST"
+          # mirror creates www/jumpbit if missing and --delete removes stale files, so no mkdir/rm is needed
+          # (lftp's "mkdir -p" fails on an existing directory, which aborts the script under cmd:fail-exit).
+          lftp -u "$HOSTPOINT_USERNAME," "sftp://$HOSTPOINT_HOST" <<LFTP
           set cmd:fail-exit yes
           set net:max-retries 2
           set net:timeout 20
-          set sftp:connect-program "ssh -a -x -i ~/.ssh/hostpoint_deploy -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes"
-          mkdir -p ~/www/jumpbit
-          cd ~/www
-          rm -r jumpbit
-          mkdir jumpbit
-          mirror --reverse dist/ jumpbit/
+          set sftp:auto-confirm no
+          set sftp:connect-program "ssh -a -x $ssh_opts"
+          mirror --reverse --delete --verbose dist/ www/jumpbit/
           bye
           LFTP
