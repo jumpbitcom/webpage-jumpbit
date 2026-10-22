@@ -59,6 +59,7 @@ The variables are validated by Astro at startup (`env.schema` in `astro.config.m
 | `src/settings.ts` | Site name, contact e-mail, operator details for the legal notice, social image |
 | `src/pages/` | Pages: home, about, contact, legal notice, privacy policy, blog, tags, 404, RSS |
 | `src/pages/[icon].ts`, `site.webmanifest.ts` | Publish the icons and social image from `assets/` and a localized web app manifest |
+| `src/pages/design/[...file].ts` | Publishes the UI sample page `assets/jumpbit-ui-example.html` with its stylesheets, logos and fonts at `/design/ui-example.html`, shown in the design blog post |
 | `src/content/blog/en/`, `src/content/blog/de/` | Blog posts. Use the same file name in both languages so the language switch finds the translation. |
 | `src/styles/site.css` | Page layout on top of `assets/jumpbit-theme.css` |
 | `assets/` | Jump Bit design system: tokens, theme, fonts, logos, icons |
