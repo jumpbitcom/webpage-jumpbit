@@ -16,7 +16,7 @@ Built with [Astro](https://docs.astro.build) 7 and styled with the Jump Bit desi
 
 ## Prerequisites
 
-- Node.js 24.22.0, the current LTS release (pinned in `.nvmrc` and `mise.toml`)
+- Node.js 24.22.1, the current LTS release (pinned in `.nvmrc` and `mise.toml`)
 - npm (lock file: `package-lock.json`)
 
 ## Setup
